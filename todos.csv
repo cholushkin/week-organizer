@@ -1,2 +1,4 @@
-learn about LLVM, 1.0
-learn about C# struct vs classes (records, record structs), 0.1
+title;description;priority;prompt
+Learn LLVM; learn about LLVM; 1.0; tell me about LLVM
+C# structs;learn about C# struct vs classes (records, record structs); 0.1; tell me about C# struct vs classes (also records, record structs and so on)
+notepadd-plus-plus lua utils; add some lua helpers to notepad++ lua. Print tables utils, print some help and some tables on start; 0.1; adding notepad++ lua scripts example
