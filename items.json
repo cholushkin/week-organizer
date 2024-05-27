@@ -1,0 +1,33 @@
+- #HLT
+ - walking 
+ - elliptical trainer (weekly, min: 3)
+ - workout (daily)
+ - memory training (weekly)
+ - eye training (weekly)
+
+- #DEV
+ - 1h-github-code-reading
+ 
+ 
+ 
+ 
+- todos
+ - todo-path
+ 
+- tasks
+ - app-workout
+  - period: daily
+  - priority: 1.0
+ - walking
+  - description: intensivly walk at least 1 hr 
+  - period: weekly
+  - priority: 0.5
+  - info-prompt: tell us about walking and how it is good for your health. Briefly describe useful practices. Don't use any markup, output everything in a short text block
+
+   
+   
+- suggestion
+  - priorities
+   - #HLT: 1.0
+   - #PRJ: 0.8
+   
