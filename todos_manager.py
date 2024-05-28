@@ -49,11 +49,13 @@ def update_todos_file(file_path, todos_to_remove):
         writer.writerows(updated_todos)
 
 def main():
-    parser = argparse.ArgumentParser(description="Todo Organizer")
+    parser = argparse.ArgumentParser(description="Todo manager")
     parser.add_argument('--update-todos', action='store_true', help="Flag to update the todos.csv by removing the suggested items")
+    parser.add_argument('--update-todos-used', action='store_true', help="Flag to update the todos-used.csv by adding used items")
     args = parser.parse_args()
 
     todos_file = 'todos.csv'
+    todos_used_file = 'todos-used.csv'
     todos = parse_todos(todos_file)
     if not todos:
         print("No valid todos found.")

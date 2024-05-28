@@ -1,5 +1,9 @@
 from openai import OpenAI
 
+# features:
+# - summarize the week
+# - generate remarks for the tasks (starting points, hints)
+
 # Function to read API key from a file
 def read_api_key(file_path):
     with open(file_path, 'r') as file:

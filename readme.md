@@ -10,8 +10,13 @@ python.exe organizer.py -suggestion -start-date 27-may-2024 -output 27-may-2024.
 ## Other commands
 - print-items
 - get-random-todos
+- print-completed-todos
 
 will generate csv file which you can paste to your google spreadsheet to manage your time and efforts during the week pipeline. 
+
+
+todos.csv - something that you can accomplish in one approach or in one week
+todos-completed.csv - if not specified then completed tasks will disappear
 
 
 # Pipeline

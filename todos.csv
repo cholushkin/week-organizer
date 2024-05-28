@@ -2,3 +2,33 @@ title;description;priority;prompt
 Learn LLVM; learn about LLVM; 1.0; tell me about LLVM
 C# structs;learn about C# struct vs classes (records, record structs); 0.1; tell me about C# struct vs classes (also records, record structs and so on)
 notepadd-plus-plus lua utils; add some lua helpers to notepad++ lua. Print tables utils, print some help and some tables on start; 0.1; adding notepad++ lua scripts example
+Data driven approach;Learn about data driven approach briefly, find some articles or books to read;0.2;what is data driven programming
+Find book for algorythms; Find book for algorythms pdf and upload to Surface; 0.9; List all popular searching algorythms
+Algorithms.Search; General review of search algorithms, find book, upload to Surface; 0.5;
+DesignPattern.ServiceLocator: https://en.wikipedia.org/wiki/Service_locator_pattern
+Multithreading in general, semaphore, mutex, other primitives
+C++. Reinterpret_cast and different casts
+C#: dependency injection, zenject
+C++: classes vs structs
+Shaders in general
+Computational shader
+C#: async/await
+Unity. Addressables
+Install linux on laptop
+Regexp / xpath / jsonpath / xml scheme
+слово override c++/c#
+c# generics
+Unity. Try https://assetstore.unity.com/packages/tools/camera/adaptive-split-screen-223436
+Unity: https://unity.com/features/unity-visual-scripting
+port shader toy to opengl 4
+port shader toy to unity shader graph
+.NET Framework vs .NET Core vs .NET vs .NET Standard vs C# versions
+genetics algorythms
+Сделать шпаргалку по стилям художников https://ckovalev.com/midjourney-ai/weekly/nov-26  - make bookmark
+https://mpost.io/midjourney-and-dall-e-artist-styles-dump-with-examples-130-famous-ai-painting-techniques/
+Article physics of sound
+ECS
+UniTask
+UniRX
+lambdas
+unity view-model-controller for GUI 

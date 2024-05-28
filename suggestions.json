@@ -1,0 +1,60 @@
+{
+  "suggestion": {
+    "daily-priorities": {
+      "#HLT": {
+        "description": "Health-related tasks: exercise, nutrition, mental activities",
+        "daily-prob": 1.0,
+        "daily-amount": "1-2",
+        "sorting-index": 0
+      },
+      "#LNG": {
+        "description": "Language-related tasks: learning grammar, building vocabulary, repetition, practice",
+        "daily-prob": 1.0,
+        "daily-amount": 1,
+        "sorting-index": 1
+      },
+      "#PRJ": {
+        "description": "Project involvement. The time you dedicate to certain projects.",
+        "daily-prob": 1.0,
+        "daily-amount": "1-2",
+        "sorting-index": 2
+      },
+      "#ART": {
+        "description": "Art-related tasks: drawing, modeling, music.",
+        "daily-prob": 1.0,
+        "daily-amount": "1-2",
+        "sorting-index": 3
+      },
+      "#DEV": {
+        "description": "Development-related tasks: studying technology, investigating codebases, reading tech books",
+        "daily-prob": 0.4,
+        "daily-amount": 1,
+        "sorting-index": 5
+      },
+      "#EDU": {
+        "description": "Education-related tasks: studying various disciplines, reading books",
+        "daily-prob": 0.5,
+        "daily-amount": 1,
+        "sorting-index": 5
+      },
+      "#SKL": {
+        "description": "Skill-development tasks: operating drones, playing musical instruments",
+        "daily-prob": 1.0,
+        "daily-amount": 1,
+        "sorting-index": 5
+      },
+      "#ENT": {
+        "description": "Playing games, watching movies, rest",
+        "daily-prob": 0.5,
+        "daily-amount": 1,
+        "sorting-index": 5
+      },
+      "#TODO": {
+        "description": "Generic task planning",
+        "daily-prob": 0.3,
+        "daily-amount": "1-2",
+        "sorting-index": 5
+      }
+    }
+  }
+}

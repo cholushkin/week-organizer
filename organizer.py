@@ -17,11 +17,13 @@ def process_todos():
         print(f"Priority: {suggestion['priority']}")
         print(f"Prompt: {suggestion['prompt']}\n")
 
-    # Optionally update todos.csv if needed
+    # Update todos.csv if needed
     update_flag = input("Do you want to update todos.csv by removing the suggested items? (yes/no): ").strip().lower()
     if update_flag == 'yes':
         todos_manager.update_todos_file(todos_file, weekly_suggestions)
         print("todos.csv has been updated.")
+        
+    # Update todos-used.csv
 
 
 def main():
