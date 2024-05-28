@@ -55,6 +55,11 @@
         "daily-amount": "1-2",
         "sorting-index": 5
       }
-    }
+    },
+	"task-source": {
+		"#HLT": {"hlt.csv"},
+		"#ENT": {"ent.csv", "movies.csv", "games.csv", "ent-books.csv"}
+	}
+	
   }
 }
