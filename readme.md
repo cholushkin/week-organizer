@@ -32,9 +32,14 @@ day 4. #HLT #LNG #PRJ #PRJ #ART #ART #DEV #SKL #TODO
 day 5. #HLT #LNG #PRJ #PRJ #ART #SKL #ENT #TODO
 day 6. #HLT #HLT #LNG #PRJ #ART #DEV #EDU #SKL #ENT
 day 7. #HLT #LNG #PRJ #ART #ART #EDU #SKL #ENT
-```
 
-user can regenerate
+`r` - regenerate
+`v` - verbose mode on/off
+
+```
+Stage 1 prepares week high-level task ditribution using settings from suggestion.json -> suggestions -> daily-priorities.
+
+
 
 > Stage 2. Populate tasks
 Prints day by day tasks from the user defined csv-files using parameters specified there.
@@ -48,12 +53,14 @@ Prints day by day tasks from the user defined csv-files using parameters specifi
  5...
  
  `r` - regenerate
- `c` - continue
+ `c` - continue to the next day
  `#x` - remove this task and never show again
  `#r` - regenerate task 
+ `#f` - focus on task (or unfocus if task was previously focused)
 ```
-r - will regenrate entire day suggestion 
-3x - will remove task 3 (#LNG language-swedish) from the csv file (lng.csv) and move it to history file (lng-history.csv)
+r - will regenerate entire day suggestion 
+3x - will remove task 3 (#LNG language-swedish) from the csv file (lng.csv) and move it to history file (lng-history.csv). Task 3 will be regenerated
+3f - focus on `language-swedish` task. Add to focus.csv file (and remove from lng.csv). That mean next time the script generate tasks suggestion it will pick tasks from the focus.csv first. For example language-swedish task has `days = 2-3` which means #LNG slot (from stage)  from different days will be filled by this task. 
 
 > Stage 3. 
 Prints final week suggestion and save to csv.
