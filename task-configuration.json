@@ -6,65 +6,74 @@
       "#HLT": {
         "description": "Health-related tasks: exercise, nutrition, mental activities",
         "weekly-amount": [7],
-        "daily-amount": [1,2],
+        "daily-amount": [1, 2],
         "pick-up-priority": 3.0,
-        "sorting-index": 0
+        "sorting-index": 0,
+        "color": "#ff0000"
       },
       "#LNG": {
         "description": "Language-related tasks: learning grammar, building vocabulary, repetition, practice",
         "weekly-amount": [7],
-        "daily-amount": [1,2],
+        "daily-amount": [1, 2],
         "pick-up-priority": 1.0,
-        "sorting-index": 1
+        "sorting-index": 1,
+        "color": "#ff9900"
       },
       "#PRJ": {
         "description": "Project involvement. The time you dedicate to certain projects.",
         "weekly-amount": [7],
         "daily-amount": [1],
         "pick-up-priority": 1.0,
-        "sorting-index": 2
+        "sorting-index": 2,
+        "color": "#9fc5e8"
       },
       "#ART": {
         "description": "Art-related tasks: drawing, modeling, music.",
-        "weekly-amount": [2,4],
+        "weekly-amount": [2, 4],
         "daily-amount": [1],
         "pick-up-priority": 0.7,
-        "sorting-index": 3
+        "sorting-index": 3,
+        "color": "#9900ff"
       },
       "#DEV": {
         "description": "Development-related tasks: studying technology, investigating codebases, reading tech books",
-        "weekly-amount": [2,4],
+        "weekly-amount": [2, 4],
         "daily-amount": [1],
         "pick-up-priority": 0.6,
-        "sorting-index": 4
+        "sorting-index": 4,
+        "color": "#1155cc"
       },
       "#EDU": {
         "description": "Education-related tasks: studying various disciplines, reading books",
         "weekly-amount": [7],
         "daily-amount": [1],
         "pick-up-priority": 0.6,
-        "sorting-index": 5
+        "sorting-index": 5,
+        "color": "#6aa84f"
       },
       "#SKL": {
         "description": "Skill-development tasks: operating drones, playing musical instruments, following tutorials",
         "weekly-amount": [7],
         "daily-amount": [1],
         "pick-up-priority": 0.8,
-        "sorting-index": 6
+        "sorting-index": 6,
+        "color": "#bf9000"
       },
       "#ENT": {
         "description": "Playing games, watching movies, rest",
-        "weekly-amount": [2,3],
-        "daily-amount": [1,2],
+        "weekly-amount": [2, 3],
+        "daily-amount": [1, 2],
         "pick-up-priority": 0.6,
-        "sorting-index": 7
+        "sorting-index": 7,
+        "color": "#ffff00"
       },
       "#TODO": {
         "description": "Generic task planning",
-        "weekly-amount": [1,2],
+        "weekly-amount": [1, 2],
         "daily-amount": [1],
         "pick-up-priority": 0.3,
-        "sorting-index": 8
+        "sorting-index": 8,
+        "color": "#ffffff"
       }
     }
   }
