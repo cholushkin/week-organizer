@@ -57,6 +57,7 @@ Prints day by day tasks from the user defined csv-files using parameters specifi
  `#x` - remove this task and never show again
  `#r` - regenerate task 
  `#f` - focus on task (or unfocus if task was previously focused)
+ `#s` - select task from the list
 ```
 r - will regenerate entire day suggestion 
 3x - will remove task 3 (#LNG language-swedish) from the csv file (lng.csv) and move it to history file (lng-history.csv). Task 3 will be regenerated

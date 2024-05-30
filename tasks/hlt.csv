@@ -1,0 +1,10 @@
+tag;task;description;pickup-priority;days;remarks;prompt;
+#HLT;app-workout-full-body;Full body workout using application;1.0;7;;
+#HLT;workout-dumbells;Exercise with dumbells;0.2;2-5;;What are good exercise with dumbells you can recomend?
+#HLT;workout-elliptic;30-60 minutes of elliptical-trainer;0.2;3-5;;
+#HLT;workout-walk;Intensivly walk for at least 1 hr;0.2;3-5;;Tell me about walking and how it is good for your health. Briefly describe useful practices.
+#HLT;workout-abs;
+#HLT;gym;
+#HLT;swimming-pool;
+#HLT;eye-training;
+#HLT;memory-training;

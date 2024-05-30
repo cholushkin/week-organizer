@@ -1,0 +1,4 @@
+tag;task;description;pickup-priority;days;remarks;prompt;
+#LNG;language-english;Generic task to learn English;0.25;7;;
+#LNG;language-swedish;Generic task to learn Swedish;0.25;7;;
+#LNG;language-thai;Generic task to learn Thai;0.25;7;;
