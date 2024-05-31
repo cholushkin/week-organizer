@@ -27,8 +27,8 @@ ANSI_COLORS = {
     "#ff00ff": Fore.LIGHTMAGENTA_EX,
     "#00ffff": Fore.LIGHTCYAN_EX,
     "#ffffff": Fore.LIGHTWHITE_EX,
-    "#ff9900": Fore.YELLOW,       # Add missing colors
-    "#9fc5e8": Fore.LIGHTCYAN_EX, # Use closest match for custom colors
+    "#ff9900": Fore.YELLOW,
+    "#9fc5e8": Fore.LIGHTCYAN_EX,
     "#9900ff": Fore.LIGHTMAGENTA_EX,
     "#1155cc": Fore.LIGHTBLUE_EX,
     "#6aa84f": Fore.LIGHTGREEN_EX,
@@ -46,13 +46,13 @@ def load_configuration(file_path):
         data = json.load(file)
     return data["tag-distribution"]["daily-priorities"]
 
-def get_tag_ranges(details):
-    if len(details["weekly-amount"]) == 1:
-        weekly_amount_min = weekly_amount_max = details["weekly-amount"][0]
+def get_tag_ranges(tag):
+    if len(tag["weekly-amount"]) == 1:
+        weekly_amount_min = weekly_amount_max = tag["weekly-amount"][0]
     else:
-        weekly_amount_min, weekly_amount_max = details["weekly-amount"]
+        weekly_amount_min, weekly_amount_max = tag["weekly-amount"]
     
-    daily_amounts = details["daily-amount"]
+    daily_amounts = tag["daily-amount"]
     if len(daily_amounts) == 1:
         daily_min = daily_max = daily_amounts[0]
     else:
@@ -65,14 +65,14 @@ def generate_schedule(priorities):
     tag_counts = {tag: 0 for tag in priorities}
     tag_ranges = {tag: () for tag in priorities}
 
-    for task, details in priorities.items():
-        weekly_amount_min, weekly_amount_max, daily_min, daily_max = get_tag_ranges(details)
+    for tag_name, tag in priorities.items():
+        weekly_amount_min, weekly_amount_max, daily_min, daily_max = get_tag_ranges(tag)
         
-        weekly_amount = random.choice(details["weekly-amount"])
+        weekly_amount = random.choice(tag["weekly-amount"])
 
         tag_min = weekly_amount_min * daily_min
         tag_max = weekly_amount_max * daily_max
-        tag_ranges[task] = (tag_min, tag_max)
+        tag_ranges[tag_name] = (tag_min, tag_max)
 
         days_to_fill = list(range(7))
         random.shuffle(days_to_fill)
@@ -80,43 +80,75 @@ def generate_schedule(priorities):
 
         for day in days_to_fill:
             daily_amount = random.randint(daily_min, daily_max)
-            weekly_schedule[day].extend([task] * daily_amount)
-            tag_counts[task] += daily_amount
+            weekly_schedule[day].extend([tag_name] * daily_amount)
+            tag_counts[tag_name] += daily_amount
 
     # Sort the schedule after adjustment
     for day in range(7):
-        weekly_schedule[day].sort(key=lambda task: priorities[task]["sorting-index"])
+        weekly_schedule[day].sort(key=lambda tag_name: priorities[tag_name]["sorting-index"])
 
     return weekly_schedule, tag_counts, tag_ranges
 
 def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=True):
     eligible_tags = []
+
+    # Identify tags that meet the adjustment criteria
     for tag, (min_count, max_count) in tag_ranges.items():
-        if easier and tag_counts[tag] > min_count:
-            eligible_tags.append(tag)
-        elif not easier and tag_counts[tag] < max_count:
-            eligible_tags.append(tag)
+        if easier:
+            if tag_counts[tag] > min_count:
+                days_with_tag = [
+                    day for day, tags in enumerate(weekly_schedule) 
+                    if tags.count(tag) > priorities[tag]["daily-amount"][0]
+                ]
+                if days_with_tag:
+                    eligible_tags.append(tag)
+        else:
+            if tag_counts[tag] < max_count:
+                days_without_tag = [
+                    day for day, tags in enumerate(weekly_schedule) 
+                    if tags.count(tag) < priorities[tag]["daily-amount"][-1]
+                ]
+                if days_without_tag:
+                    eligible_tags.append(tag)
 
     if not eligible_tags:
         print("No tags eligible for adjustment.")
         return weekly_schedule, tag_counts
 
     tag = random.choice(eligible_tags)
+
     if easier:
         print(f"Decreasing count of {tag}")
-        days_with_tag = [day for day, tasks in enumerate(weekly_schedule) if tag in tasks]
-        if days_with_tag:
-            day_to_adjust = random.choice(days_with_tag)
-            weekly_schedule[day_to_adjust].remove(tag)
-            tag_counts[tag] -= 1
+        
+        days_with_tag = [
+            day for day, tags in enumerate(weekly_schedule) 
+            if tags.count(tag) > priorities[tag]["daily-amount"][0]
+        ]
+        
+        if not days_with_tag:
+            print("No tags eligible for adjustment.")
+            return weekly_schedule, tag_counts
+
+        day_to_adjust = random.choice(days_with_tag)
+        weekly_schedule[day_to_adjust].remove(tag)
+        tag_counts[tag] -= 1
+        
     else:
         print(f"Increasing count of {tag}")
-        days_without_tag = [day for day, tasks in enumerate(weekly_schedule)]
-        if days_without_tag:
-            day_to_adjust = random.choice(days_without_tag)
-            weekly_schedule[day_to_adjust].append(tag)
-            tag_counts[tag] += 1
-            
+        
+        days_without_tag = [
+            day for day, tags in enumerate(weekly_schedule) 
+            if tags.count(tag) < priorities[tag]["daily-amount"][-1]
+        ]
+        
+        if not days_without_tag:
+            print("No tags eligible for adjustment.")
+            return weekly_schedule, tag_counts
+
+        day_to_adjust = random.choice(days_without_tag)
+        weekly_schedule[day_to_adjust].append(tag)
+        tag_counts[tag] += 1
+
     # Sort the schedule after adjustment
     for day in range(7):
         weekly_schedule[day].sort(key=lambda task: priorities[task]["sorting-index"])
@@ -124,26 +156,31 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
     return weekly_schedule, tag_counts
 
 
-def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
-    def get_color(hex_code):
-        return ANSI_COLORS.get(hex_code.lower(), Fore.WHITE)
+def get_color(hex_code):
+    return ANSI_COLORS.get(hex_code.lower(), Fore.WHITE)
 
+def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
     for day, tasks in enumerate(weekly_schedule, start=1):
         task_strings = []
         for task in tasks:
-            color = get_color(priorities[task]["color"])
+            color = get_color(priorities[task].get("color", "white"))
             task_strings.append(f"{color}{task}{Style.RESET_ALL}")
         print(f"day {day}. {' '.join(task_strings)}")
 
     print("\nTag Counts and Ranges:")
     for tag, count in tag_counts.items():
         min_count, max_count = tag_ranges[tag]
-        color = get_color(priorities[tag]["color"])
-        print(f"{color}{tag}: {count} (min: {min_count}, max: {max_count}){Style.RESET_ALL}")
+        color = get_color(priorities[tag].get("color", "white"))
+        weekly_amount = priorities[tag]["weekly-amount"]
+        daily_amount = priorities[tag]["daily-amount"]
+        weekly_range = f"{weekly_amount[0]}" if len(weekly_amount) == 1 else f"{weekly_amount[0]}-{weekly_amount[1]}"
+        daily_range = f"{daily_amount[0]}" if len(daily_amount) == 1 else f"{daily_amount[0]}-{daily_amount[1]}"
+        print(f"{color}{tag}: {count} (min: {min_count}, max: {max_count}, weekly: {weekly_range}, daily: {daily_range}){Style.RESET_ALL}")
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
     parser.add_argument("file", help="Path to the task configuration JSON file")
+    parser.add_argument("--clr", action="store_true", help="Clear console before displaying the schedule")
 
     args = parser.parse_args()
 
@@ -154,10 +191,11 @@ def main():
         sys.exit(1)
 
     weekly_schedule, tag_counts, tag_ranges = generate_schedule(priorities)
-    clear_console()
+    
+    if args.clr:
+        clear_console()
     print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)
     
-    # Interactive loop
     while True:
         user_input = input(
             """
@@ -165,7 +203,7 @@ Enter your option:
   'i' - to increase week difficulty;
   'd' - to decrease week difficulty;
   'r' - to regenerate week;
-  'e' - to continue;
+  'e' - to exit;
 """
         ).strip().lower()
         if user_input == "i":
@@ -179,8 +217,9 @@ Enter your option:
         else:
             print("Invalid input. Please enter 'i', 'd', 'r', or 'e'.")
         
-        clear_console()  # Clear the console before displaying the updated schedule
-        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)  # Print updated schedule
+        if args.clr:
+            clear_console()
+        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)
 
 if __name__ == "__main__":
     main()
