@@ -47,10 +47,10 @@ def load_configuration(file_path):
     return data["tag-distribution"]["daily-priorities"]
 
 def get_tag_ranges(tag):
-    if len(tag["weekly-amount"]) == 1:
-        weekly_amount_min = weekly_amount_max = tag["weekly-amount"][0]
+    if len(tag["weekly-amount-days"]) == 1:
+        weekly_amount_min = weekly_amount_max = tag["weekly-amount-days"][0]
     else:
-        weekly_amount_min, weekly_amount_max = tag["weekly-amount"]
+        weekly_amount_min, weekly_amount_max = tag["weekly-amount-days"]
     
     daily_amounts = tag["daily-amount"]
     if len(daily_amounts) == 1:
@@ -68,7 +68,7 @@ def generate_schedule(priorities):
     for tag_name, tag in priorities.items():
         weekly_amount_min, weekly_amount_max, daily_min, daily_max = get_tag_ranges(tag)
         
-        weekly_amount = random.choice(tag["weekly-amount"])
+        weekly_amount = random.choice(tag["weekly-amount-days"])
 
         tag_min = weekly_amount_min * daily_min
         tag_max = weekly_amount_max * daily_max
@@ -112,7 +112,8 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
                     eligible_tags.append(tag)
 
     if not eligible_tags:
-        print("No tags eligible for adjustment.")
+        print("No tags eligible for adjustment. (0)")
+        print(f"Eligible tags for {'decreasing' if easier else 'increasing'}: {eligible_tags}")
         return weekly_schedule, tag_counts
 
     tag = random.choice(eligible_tags)
@@ -158,24 +159,72 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
 
 def get_color(hex_code):
     return ANSI_COLORS.get(hex_code.lower(), Fore.WHITE)
+    
+def calculate_week_difficulty(tag_counts, tag_ranges, priorities):
+    min_difficulty = sum(tag_ranges[tag][0] for tag in tag_counts)
+    max_difficulty = sum(tag_ranges[tag][1] for tag in tag_counts)
+    current_difficulty = sum(tag_counts[tag] for tag in tag_counts)
+    
+    min_difficulty_percent = (min_difficulty * 100) / max_difficulty
+    current_difficulty_percent = (current_difficulty * 100) / max_difficulty
+    return min_difficulty_percent, current_difficulty_percent
 
 def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
+    tag_day_count = {tag: 0 for tag in priorities}  # Initialize day count for each tag
+    week_tags_count = []
     for day, tasks in enumerate(weekly_schedule, start=1):
         task_strings = []
+        daily_tag_count = {tag: 0 for tag in priorities}  # Initialize daily tag count
+        
         for task in tasks:
             color = get_color(priorities[task].get("color", "white"))
             task_strings.append(f"{color}{task}{Style.RESET_ALL}")
+            daily_tag_count[task] += 1  # Count each occurrence of the task
+            
+        week_tags_count.append(daily_tag_count)    
+        
         print(f"day {day}. {' '.join(task_strings)}")
+        
+        # Update the number of days each tag appears
+        for tag, count in daily_tag_count.items():
+            if count > 0:
+                tag_day_count[tag] += 1
 
+        # Print daily tag counts
+        #for tag, count in daily_tag_count.items():
+        #    if count > 0:  # Only print tags that are used that day
+        #        color = get_color(priorities[tag].get("color", "white"))
+        #        print(f"  {color}{tag}: {count} time(s) today{Style.RESET_ALL}")
+                
     print("\nTag Counts and Ranges:")
     for tag, count in tag_counts.items():
         min_count, max_count = tag_ranges[tag]
         color = get_color(priorities[tag].get("color", "white"))
-        weekly_amount = priorities[tag]["weekly-amount"]
+        weekly_amount = priorities[tag]["weekly-amount-days"]
         daily_amount = priorities[tag]["daily-amount"]
-        weekly_range = f"{weekly_amount[0]}" if len(weekly_amount) == 1 else f"{weekly_amount[0]}-{weekly_amount[1]}"
-        daily_range = f"{daily_amount[0]}" if len(daily_amount) == 1 else f"{daily_amount[0]}-{daily_amount[1]}"
-        print(f"{color}{tag}: {count} (min: {min_count}, max: {max_count}, weekly: {weekly_range}, daily: {daily_range}){Style.RESET_ALL}")
+        tag_counts_str = ", ".join([str(tag_count[tag]) for tag_count in week_tags_count if tag_count[tag] > 0])
+
+        
+        # Handle weekly amount range
+        if len(weekly_amount) > 1:
+            weekly_range = f"{weekly_amount[0]}-{weekly_amount[1]}"
+        else:
+            weekly_range = f"{weekly_amount[0]}-{weekly_amount[0]}"
+        
+        # Handle daily amount range
+        if len(daily_amount) > 1:
+            daily_range = f"{daily_amount[0]}-{daily_amount[1]}"
+        else:
+            daily_range = f"{daily_amount[0]}-{daily_amount[0]}"
+        
+        print(f"{color}{tag}: tag-sum:{min_count}-{max_count}(cur:{count}), "
+              f"weekly-amount-days: {weekly_range}(cur:{tag_day_count[tag]}), "
+              f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
+
+              
+    min_difficulty_percent, current_difficulty_percent = calculate_week_difficulty(tag_counts, tag_ranges, priorities)
+    print(f"\nCurrent Difficulty: {current_difficulty_percent:.2f}% (Minimum: {min_difficulty_percent:.2f}%)")      
+
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
