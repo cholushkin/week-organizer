@@ -1,6 +1,7 @@
-tag;task;description;pickup-priority;days;remarks;prompt;
-#TODO;notepadd-plus-plus lua utils;Add some lua helpers to notepad++ lua. Print tables utils, print some help and some tables on start; 0.1; 1;Take from unity console project;adding notepad++ lua scripts example
-#TODO;motepad-plus-plus-csv;find notepad plugin for csv;0.1;1;;is there a plugin for csv for notepad++?
-#TODO;Install linux on laptop;choose distributive and install linux;0.1;1;;what is a good linux distributive for a programmer? Also give an intro to install linux
-#TODO;Cheat sheet artists styles; Cheat sheet artists styles, probably just links and 10 most usefull. Add to SD cheat sheet?;0.1;1;https://ckovalev.com/midjourney-ai/weekly/nov-26 https://mpost.io/midjourney-and-dall-e-artist-styles-dump-with-examples-130-famous-ai-painting-techniques/ - make bookmarks;
-#TODO;virtual-machine;learn about virtual machine, setup one on notebook, experimenting with setup of different stuff;0.2;;what are good good virtual-machine for linux?
+tag;task;description;pickup-priority;days;remarks;prompt
+TODO;notepadd-plus-plus lua utils;Add some lua helpers to notepad++ lua. Print tables utils, print some help and some tables on start; 0.1; 1;Take from unity console project;adding notepad++ lua scripts example
+TODO;motepad-plus-plus-csv;find notepad plugin for csv;0.1;1;;is there a plugin for csv for notepad++?
+TODO;Install linux on laptop;choose distributive and install linux;0.1;1;;what is a good linux distributive for a programmer? Also give an intro to install linux
+TODO;Cheat sheet artists styles; Cheat sheet artists styles, probably just links and 10 most usefull. Add to SD cheat sheet?;0.1;1;https://ckovalev.com/midjourney-ai/weekly/nov-26 https://mpost.io/midjourney-and-dall-e-artist-styles-dump-with-examples-130-famous-ai-painting-techniques/ - make bookmarks;
+TODO;virtual-machine;learn about virtual machine, setup one on notebook, experimenting with setup of different stuff;0.2;;what are good good virtual-machine for linux?
+TODO;clean-old-pc;clean old pc;0.2;1;;

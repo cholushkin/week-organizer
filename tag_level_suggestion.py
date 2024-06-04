@@ -89,6 +89,11 @@ def generate_schedule(priorities):
 
     return weekly_schedule, tag_counts, tag_ranges
 
+    
+# 1. try to reduce/increase daily amount (check daily-amount range)
+# 2. try to reduce/increase weekly ammount (check weekly range)
+#    - for inc: add entire day with maximum daily-amount tag for this day
+#    - for dec: remove entire day (remove all specified tags from 1 day, for example removes all #HLT from day 2)
 def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=True):
     eligible_tags = []
 
@@ -112,8 +117,7 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
                     eligible_tags.append(tag)
 
     if not eligible_tags:
-        print("No tags eligible for adjustment. (0)")
-        print(f"Eligible tags for {'decreasing' if easier else 'increasing'}: {eligible_tags}")
+        print("No more adjustment suggestion avaialable. Regenerate if you're not satisfied with the result.")        
         return weekly_schedule, tag_counts
 
     tag = random.choice(eligible_tags)
@@ -127,7 +131,7 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
         ]
         
         if not days_with_tag:
-            print("No tags eligible for adjustment.")
+            print("No more adjustment suggestion avaialable. Regenerate if you're not satisfied with the result.")        
             return weekly_schedule, tag_counts
 
         day_to_adjust = random.choice(days_with_tag)
@@ -143,7 +147,7 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
         ]
         
         if not days_without_tag:
-            print("No tags eligible for adjustment.")
+            print("No more adjustment suggestion avaialable. Regenerate if you're not satisfied with the result.")        
             return weekly_schedule, tag_counts
 
         day_to_adjust = random.choice(days_without_tag)
@@ -160,16 +164,8 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
 def get_color(hex_code):
     return ANSI_COLORS.get(hex_code.lower(), Fore.WHITE)
     
-def calculate_week_difficulty(tag_counts, tag_ranges, priorities):
-    min_difficulty = sum(tag_ranges[tag][0] for tag in tag_counts)
-    max_difficulty = sum(tag_ranges[tag][1] for tag in tag_counts)
-    current_difficulty = sum(tag_counts[tag] for tag in tag_counts)
-    
-    min_difficulty_percent = (min_difficulty * 100) / max_difficulty
-    current_difficulty_percent = (current_difficulty * 100) / max_difficulty
-    return min_difficulty_percent, current_difficulty_percent
 
-def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
+def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose):
     tag_day_count = {tag: 0 for tag in priorities}  # Initialize day count for each tag
     week_tags_count = []
     for day, tasks in enumerate(weekly_schedule, start=1):
@@ -216,20 +212,20 @@ def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
             daily_range = f"{daily_amount[0]}-{daily_amount[1]}"
         else:
             daily_range = f"{daily_amount[0]}-{daily_amount[0]}"
-        
-        print(f"{color}{tag}: tag-sum:{min_count}-{max_count}(cur:{count}), "
-              f"weekly-amount-days: {weekly_range}(cur:{tag_day_count[tag]}), "
-              f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
-
-              
-    min_difficulty_percent, current_difficulty_percent = calculate_week_difficulty(tag_counts, tag_ranges, priorities)
-    print(f"\nCurrent Difficulty: {current_difficulty_percent:.2f}% (Minimum: {min_difficulty_percent:.2f}%)")      
+            
+        if verbose:
+            print(f"{color}{tag}: tag-sum:{min_count}-{max_count}(cur:{count}), "
+                  f"weekly-amount-days: {weekly_range}(cur:{tag_day_count[tag]}), "
+                  f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
+        else:
+            print(f"{color}{tag}: {count}")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
     parser.add_argument("file", help="Path to the task configuration JSON file")
     parser.add_argument("--clr", action="store_true", help="Clear console before displaying the schedule")
+    parser.add_argument("--verbose", action="store_true", help="Provide more verbose output")
 
     args = parser.parse_args()
 
@@ -243,7 +239,7 @@ def main():
     
     if args.clr:
         clear_console()
-    print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)
+    print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, args.verbose)
     
     while True:
         user_input = input(
@@ -268,7 +264,7 @@ Enter your option:
         
         if args.clr:
             clear_console()
-        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)
+        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, args.verbose)
 
 if __name__ == "__main__":
     main()

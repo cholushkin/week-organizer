@@ -1,6 +1,6 @@
 {
   "tasks-dir": "tasks",
-  "completed-dir": "completed",
+  "stash-dir": "stash",
   "tag-distribution": {
     "daily-priorities": {
       "#HLT": {

@@ -1,8 +1,11 @@
-tag;task;description;pickup-priority;days;remarks;prompt;
-#ART;pencil-sketching;practicing pencil drawing, following some tutorial, book, lesson, technic;0.2;3-5;;what are good pencil drawing practice tips?
-#ART;digital-sketching;practicing digital sketching, following some tutorial, book, lesson, technic;0.2;3-5;;what are good digital sketching practice tips?
-#ART;drawing-vector;practicing vector drawing, following some tutorial, book, lesson, technic;0.2;3-5;;what are good drawing practice tips?
-#ART;drawing-painting;practicing digital painting, following some tutorial, book, lesson, technic;0.2;3-5;;what are good digital painting practice tips?
-#ART;ai-generate-images;practicing in generative art together with painting;0.2;3-5;;
-#ART;sculpting;blender scultping character;0.2;3-5;;
- 
+tag;task;description;pickup-priority;days;remarks;prompt
+ART;pencil-sketching;practicing pencil drawing, following some tutorial, book, lesson, technic;0.2;3-5;;what are good pencil drawing practice tips?
+ART;digital-sketching;practicing digital sketching, following some tutorial, book, lesson, technic;0.2;3-5;;what are good digital sketching practice tips?
+ART;drawing-vector;practicing vector drawing, following some tutorial, book, lesson, technic;0.2;3-5;;what are good drawing practice tips?
+ART;drawing-painting;practicing digital painting, following some tutorial, book, lesson, technic;0.2;3-5;;what are good digital painting practice tips?
+ART;ai-generate-images;practicing in generative art together with painting;0.2;3-5;;
+ART;sculpting;blender scultping character;0.2;3-5;;
+ART;blender-texturing;;0.2;1;;
+ART;blender-rigging;;0.2;1;;
+ART;blender-animation;;0.2;1;;
+ART;blender-sculpting;;0.2;1;;
