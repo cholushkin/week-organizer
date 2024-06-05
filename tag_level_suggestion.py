@@ -219,27 +219,15 @@ def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose)
                   f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
         else:
             print(f"{color}{tag}: {count}")
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
-    parser.add_argument("file", help="Path to the task configuration JSON file")
-    parser.add_argument("--clr", action="store_true", help="Clear console before displaying the schedule")
-    parser.add_argument("--verbose", action="store_true", help="Provide more verbose output")
-
-    args = parser.parse_args()
-
-    try:
-        priorities = load_configuration(args.file)
-    except FileNotFoundError:
-        print(f"Error: The file {args.file} does not exist.")
-        sys.exit(1)
-
+            
+            
+def run_interactive_mode(clr, verbose, priorities):
+    print("Tag suggestion interactive mode running...")
     weekly_schedule, tag_counts, tag_ranges = generate_schedule(priorities)
     
-    if args.clr:
+    if clr:
         clear_console()
-    print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, args.verbose)
+    print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose)
     
     while True:
         user_input = input(
@@ -248,7 +236,7 @@ Enter your option:
   'i' - to increase week difficulty;
   'd' - to decrease week difficulty;
   'r' - to regenerate week;
-  'e' - to exit;
+  'c' - to continue;
 """
         ).strip().lower()
         if user_input == "i":
@@ -257,14 +245,34 @@ Enter your option:
             weekly_schedule, tag_counts = adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=True)
         elif user_input == "r":
             weekly_schedule, tag_counts, tag_ranges = generate_schedule(priorities)
-        elif user_input == "e":
+        elif user_input == "c":
             break
         else:
-            print("Invalid input. Please enter 'i', 'd', 'r', or 'e'.")
+            print("Invalid input. Please enter 'i', 'd', 'r', or 'c'.")
         
-        if args.clr:
+        if clr:
             clear_console()
-        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, args.verbose)
+        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose)
+        
+    return weekly_schedule, tag_counts, tag_ranges 
+            
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
+    parser.add_argument("--cfg", help="Path to the task configuration JSON file")
+    parser.add_argument("--clr", action="store_true", help="Clear console before displaying the schedule")
+    parser.add_argument("--verbose", action="store_true", help="Provide more verbose output")
+
+    args = parser.parse_args()
+
+    try:
+        priorities = load_configuration(args.cfg)
+    except FileNotFoundError:
+        print(f"Error: The file {args.cfg} does not exist.")
+        sys.exit(1)
+
+    run_interactive_mode(args.clr, args.verbose, priorities)
 
 if __name__ == "__main__":
     main()

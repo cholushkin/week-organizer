@@ -75,3 +75,13 @@ the pipeline is the following
 - review it and arrange, add new specific items
 - during the week update the list moving items to another day if needed and changing the status to done
 - in the end of the week move the sheet to the done sheet and write week conclusion
+
+
+
+
+## Modules review
+
+- week_organizer_main.py - entry point. load and parse tasks csv files. Also uses 2 other modules tag_level_suggestion.py and task_level_suggestion.py
+- tag_level_suggestion.py - make a week suggestion in terms of tags. Could work as a separate console program.
+- task_level_suggestion.py - make a week suggestion in terms of tasks. Using as input the result received from tag_level_suggestion. Generates week_plan.csv as an output.
+

@@ -3,6 +3,7 @@ import sys
 import os
 import csv
 import json
+from datetime import datetime
 import tag_level_suggestion
 
 def load_configuration(file_path):
@@ -73,60 +74,73 @@ def load_csv_files_from_directory(tasks_dir, verbose):
     return all_data
 
 def print_db(data):
+    MAX_VAL_LEN = 24
     if not data:
         print("No data to display.")
         return
     
     # Print each data row
     for row in data:
-        description = row.get('description', '')
-        if len(description) > 30:
-            description = description[:27] + "..."  # Shorten the description to 30 characters
-        row_str = {k: (v if k != 'description' else description) for k, v in row.items()}
-        print(row_str)
+        # Shorten any value that exceeds MAX_VAL_LEN
+        shortened_row = {k: (v if v is None or len(v) <= MAX_VAL_LEN else v[:MAX_VAL_LEN-3] + "...") for k, v in row.items()}
+        print(shortened_row)
+
         
         
 def main():
-    parser = argparse.ArgumentParser(description="Organizer week plan suggestion utility")
+    parser = argparse.ArgumentParser(
+        description="Organizer week plan suggestion utility",
+        epilog="Usage example:\norganizer.py --cfg task-configuration.json --start-date 27-May-2024 --output 27-May-2024-week-plan.csv"
+    )
 
     parser.add_argument(
         '--verbose',
         action='store_true',
-        help=''
+        help='Increase output verbosity with detailed logging'
     )
     parser.add_argument(
         '--start-date',
         type=str,
-        help='The start date in DD-MMM-YYYY format'
+        help='The start date in DD-MMM-YYYY format. Defaults to today\'s date if not specified.'
     )
     parser.add_argument(
         '--output',
         type=str,
-        required=True,
-        help='The output CSV file name'
+        help='The name of the output CSV file where the week plan will be saved. Defaults to "date-week-plan.csv" if not specified.'
+    )
+    parser.add_argument(
+        '--cfg',
+        type=str,        
+        help='Path to the task configuration JSON file. Defaults to "task-configuration.json" if not specified'
     )
 
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-        print("")
-        print("Usage example:")
-        print("organizer.py -suggestion -start-date 27-May-2024 -output 27-May-2024week.csv")
-        sys.exit(1)
-
     args = parser.parse_args()
-    cfg = load_configuration("task-configuration.json")
 
-    print(f'Start date: {args.start_date}')
-    print(f'Output file: {args.output}')
-    print(f'Generating a week suggestions...')
+    # Use current date if --start-date is not specified
+    if args.start_date is None:
+        args.start_date = datetime.now().strftime("%d-%b-%Y")
+    
+    # Use default output file name if not specified
+    if args.output is None:
+        args.output = f"{args.start_date}-week-plan.csv"
+        
+    # Use default cfg file name if not specified
+    if args.cfg is None:
+        args.cfg = "task-configuration.json"
+
+    cfg = load_configuration(args.cfg)
+
     if args.verbose:
+        print('Generating a week suggestions...')
         print(f"tasks-dir: {cfg['tasks-dir']}")
+        print(f'Start date: {args.start_date}')
+        print(f'Output file: {args.output}')
     
     tasks_db = load_csv_files_from_directory(cfg["tasks-dir"], args.verbose)
     if args.verbose:
         print_db(tasks_db)
-
-    
+        
+    tag_level_suggestion.run_interactive_mode(False, args.verbose, cfg["tag-distribution"]["daily-priorities"])    
 
 if __name__ == "__main__":
     main()
