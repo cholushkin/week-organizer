@@ -9,31 +9,16 @@ from colorama import init, Fore, Style
 # Initialize colorama
 init(autoreset=True)
 
-# Define a map of hex color codes to ANSI colors
 ANSI_COLORS = {
-    "#000000": Fore.BLACK,
-    "#800000": Fore.RED,
-    "#008000": Fore.GREEN,
-    "#808000": Fore.YELLOW,
-    "#000080": Fore.BLUE,
-    "#800080": Fore.MAGENTA,
-    "#008080": Fore.CYAN,
-    "#c0c0c0": Fore.WHITE,
-    "#808080": Fore.LIGHTBLACK_EX,
-    "#ff0000": Fore.LIGHTRED_EX,
-    "#00ff00": Fore.LIGHTGREEN_EX,
-    "#ffff00": Fore.LIGHTYELLOW_EX,
-    "#0000ff": Fore.LIGHTBLUE_EX,
-    "#ff00ff": Fore.LIGHTMAGENTA_EX,
-    "#00ffff": Fore.LIGHTCYAN_EX,
-    "#ffffff": Fore.LIGHTWHITE_EX,
-    "#ff9900": Fore.YELLOW,
-    "#9fc5e8": Fore.LIGHTCYAN_EX,
-    "#9900ff": Fore.LIGHTMAGENTA_EX,
-    "#1155cc": Fore.LIGHTBLUE_EX,
-    "#6aa84f": Fore.LIGHTGREEN_EX,
-    "#bf9000": Fore.YELLOW
+    "#000000": Fore.BLACK, "#800000": Fore.RED, "#008000": Fore.GREEN, "#808000": Fore.YELLOW, 
+    "#000080": Fore.BLUE, "#800080": Fore.MAGENTA, "#008080": Fore.CYAN, "#c0c0c0": Fore.WHITE, 
+    "#808080": Fore.LIGHTBLACK_EX, "#ff0000": Fore.LIGHTRED_EX, "#00ff00": Fore.LIGHTGREEN_EX, 
+    "#ffff00": Fore.LIGHTYELLOW_EX, "#0000ff": Fore.LIGHTBLUE_EX, "#ff00ff": Fore.LIGHTMAGENTA_EX, 
+    "#00ffff": Fore.LIGHTCYAN_EX, "#ffffff": Fore.LIGHTWHITE_EX, "#ff9900": Fore.YELLOW, 
+    "#9fc5e8": Fore.LIGHTCYAN_EX, "#9900ff": Fore.LIGHTMAGENTA_EX, "#1155cc": Fore.LIGHTBLUE_EX, 
+    "#6aa84f": Fore.LIGHTGREEN_EX, "#bf9000": Fore.YELLOW
 }
+
 def clear_console():
     # Check the operating system
     if platform.system() == "Windows":

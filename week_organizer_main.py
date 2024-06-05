@@ -5,10 +5,15 @@ import csv
 import json
 from datetime import datetime
 import tag_level_suggestion
+import task_level_suggestion
 
 def load_configuration(file_path):
-    with open(file_path, 'r') as file:
-        return json.load(file)    
+    try:
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"Error: The file {file_path} does not exist.")
+        sys.exit(1)
 
 def is_valid_csv_file(file_path):
     try:
@@ -140,7 +145,13 @@ def main():
     if args.verbose:
         print_db(tasks_db)
         
-    tag_level_suggestion.run_interactive_mode(False, args.verbose, cfg["tag-distribution"]["daily-priorities"])    
+    weekly_schedule, tag_counts, tag_ranges = tag_level_suggestion.run_interactive_mode(False, args.verbose, cfg["tag-distribution"]["daily-priorities"])
+    
+    task_level_suggestion.run_interactive_mode(args.verbose, weekly_schedule, tag_counts, tag_ranges, tasks_db, args.start_date)
+    
+    
+    
+    
 
 if __name__ == "__main__":
     main()
