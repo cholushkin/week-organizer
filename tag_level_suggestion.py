@@ -9,31 +9,16 @@ from colorama import init, Fore, Style
 # Initialize colorama
 init(autoreset=True)
 
-# Define a map of hex color codes to ANSI colors
 ANSI_COLORS = {
-    "#000000": Fore.BLACK,
-    "#800000": Fore.RED,
-    "#008000": Fore.GREEN,
-    "#808000": Fore.YELLOW,
-    "#000080": Fore.BLUE,
-    "#800080": Fore.MAGENTA,
-    "#008080": Fore.CYAN,
-    "#c0c0c0": Fore.WHITE,
-    "#808080": Fore.LIGHTBLACK_EX,
-    "#ff0000": Fore.LIGHTRED_EX,
-    "#00ff00": Fore.LIGHTGREEN_EX,
-    "#ffff00": Fore.LIGHTYELLOW_EX,
-    "#0000ff": Fore.LIGHTBLUE_EX,
-    "#ff00ff": Fore.LIGHTMAGENTA_EX,
-    "#00ffff": Fore.LIGHTCYAN_EX,
-    "#ffffff": Fore.LIGHTWHITE_EX,
-    "#ff9900": Fore.YELLOW,
-    "#9fc5e8": Fore.LIGHTCYAN_EX,
-    "#9900ff": Fore.LIGHTMAGENTA_EX,
-    "#1155cc": Fore.LIGHTBLUE_EX,
-    "#6aa84f": Fore.LIGHTGREEN_EX,
-    "#bf9000": Fore.YELLOW
+    "#000000": Fore.BLACK, "#800000": Fore.RED, "#008000": Fore.GREEN, "#808000": Fore.YELLOW, 
+    "#000080": Fore.BLUE, "#800080": Fore.MAGENTA, "#008080": Fore.CYAN, "#c0c0c0": Fore.WHITE, 
+    "#808080": Fore.LIGHTBLACK_EX, "#ff0000": Fore.LIGHTRED_EX, "#00ff00": Fore.LIGHTGREEN_EX, 
+    "#ffff00": Fore.LIGHTYELLOW_EX, "#0000ff": Fore.LIGHTBLUE_EX, "#ff00ff": Fore.LIGHTMAGENTA_EX, 
+    "#00ffff": Fore.LIGHTCYAN_EX, "#ffffff": Fore.LIGHTWHITE_EX, "#ff9900": Fore.YELLOW, 
+    "#9fc5e8": Fore.LIGHTCYAN_EX, "#9900ff": Fore.LIGHTMAGENTA_EX, "#1155cc": Fore.LIGHTBLUE_EX, 
+    "#6aa84f": Fore.LIGHTGREEN_EX, "#bf9000": Fore.YELLOW
 }
+
 def clear_console():
     # Check the operating system
     if platform.system() == "Windows":
@@ -89,6 +74,11 @@ def generate_schedule(priorities):
 
     return weekly_schedule, tag_counts, tag_ranges
 
+    
+# 1. try to reduce/increase daily amount (check daily-amount range)
+# 2. try to reduce/increase weekly ammount (check weekly range)
+#    - for inc: add entire day with maximum daily-amount tag for this day
+#    - for dec: remove entire day (remove all specified tags from 1 day, for example removes all #HLT from day 2)
 def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=True):
     eligible_tags = []
 
@@ -112,8 +102,7 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
                     eligible_tags.append(tag)
 
     if not eligible_tags:
-        print("No tags eligible for adjustment. (0)")
-        print(f"Eligible tags for {'decreasing' if easier else 'increasing'}: {eligible_tags}")
+        print("No more adjustment suggestion avaialable. Regenerate if you're not satisfied with the result.")        
         return weekly_schedule, tag_counts
 
     tag = random.choice(eligible_tags)
@@ -127,7 +116,7 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
         ]
         
         if not days_with_tag:
-            print("No tags eligible for adjustment.")
+            print("No more adjustment suggestion avaialable. Regenerate if you're not satisfied with the result.")        
             return weekly_schedule, tag_counts
 
         day_to_adjust = random.choice(days_with_tag)
@@ -143,7 +132,7 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
         ]
         
         if not days_without_tag:
-            print("No tags eligible for adjustment.")
+            print("No more adjustment suggestion avaialable. Regenerate if you're not satisfied with the result.")        
             return weekly_schedule, tag_counts
 
         day_to_adjust = random.choice(days_without_tag)
@@ -160,16 +149,8 @@ def adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=
 def get_color(hex_code):
     return ANSI_COLORS.get(hex_code.lower(), Fore.WHITE)
     
-def calculate_week_difficulty(tag_counts, tag_ranges, priorities):
-    min_difficulty = sum(tag_ranges[tag][0] for tag in tag_counts)
-    max_difficulty = sum(tag_ranges[tag][1] for tag in tag_counts)
-    current_difficulty = sum(tag_counts[tag] for tag in tag_counts)
-    
-    min_difficulty_percent = (min_difficulty * 100) / max_difficulty
-    current_difficulty_percent = (current_difficulty * 100) / max_difficulty
-    return min_difficulty_percent, current_difficulty_percent
 
-def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
+def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose):
     tag_day_count = {tag: 0 for tag in priorities}  # Initialize day count for each tag
     week_tags_count = []
     for day, tasks in enumerate(weekly_schedule, start=1):
@@ -216,34 +197,22 @@ def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities):
             daily_range = f"{daily_amount[0]}-{daily_amount[1]}"
         else:
             daily_range = f"{daily_amount[0]}-{daily_amount[0]}"
-        
-        print(f"{color}{tag}: tag-sum:{min_count}-{max_count}(cur:{count}), "
-              f"weekly-amount-days: {weekly_range}(cur:{tag_day_count[tag]}), "
-              f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
-
-              
-    min_difficulty_percent, current_difficulty_percent = calculate_week_difficulty(tag_counts, tag_ranges, priorities)
-    print(f"\nCurrent Difficulty: {current_difficulty_percent:.2f}% (Minimum: {min_difficulty_percent:.2f}%)")      
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
-    parser.add_argument("file", help="Path to the task configuration JSON file")
-    parser.add_argument("--clr", action="store_true", help="Clear console before displaying the schedule")
-
-    args = parser.parse_args()
-
-    try:
-        priorities = load_configuration(args.file)
-    except FileNotFoundError:
-        print(f"Error: The file {args.file} does not exist.")
-        sys.exit(1)
-
+            
+        if verbose:
+            print(f"{color}{tag}: tag-sum:{min_count}-{max_count}(cur:{count}), "
+                  f"weekly-amount-days: {weekly_range}(cur:{tag_day_count[tag]}), "
+                  f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
+        else:
+            print(f"{color}{tag}: {count}")
+            
+            
+def run_interactive_mode(clr, verbose, priorities):
+    print("Tag suggestion interactive mode running...")
     weekly_schedule, tag_counts, tag_ranges = generate_schedule(priorities)
     
-    if args.clr:
+    if clr:
         clear_console()
-    print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)
+    print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose)
     
     while True:
         user_input = input(
@@ -252,7 +221,7 @@ Enter your option:
   'i' - to increase week difficulty;
   'd' - to decrease week difficulty;
   'r' - to regenerate week;
-  'e' - to exit;
+  'c' - to continue;
 """
         ).strip().lower()
         if user_input == "i":
@@ -261,14 +230,34 @@ Enter your option:
             weekly_schedule, tag_counts = adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=True)
         elif user_input == "r":
             weekly_schedule, tag_counts, tag_ranges = generate_schedule(priorities)
-        elif user_input == "e":
+        elif user_input == "c":
             break
         else:
-            print("Invalid input. Please enter 'i', 'd', 'r', or 'e'.")
+            print("Invalid input. Please enter 'i', 'd', 'r', or 'c'.")
         
-        if args.clr:
+        if clr:
             clear_console()
-        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities)
+        print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose)
+        
+    return weekly_schedule, tag_counts, tag_ranges 
+            
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate a weekly task schedule.")
+    parser.add_argument("--cfg", help="Path to the task configuration JSON file")
+    parser.add_argument("--clr", action="store_true", help="Clear console before displaying the schedule")
+    parser.add_argument("--verbose", action="store_true", help="Provide more verbose output")
+
+    args = parser.parse_args()
+
+    try:
+        priorities = load_configuration(args.cfg)
+    except FileNotFoundError:
+        print(f"Error: The file {args.cfg} does not exist.")
+        sys.exit(1)
+
+    run_interactive_mode(args.clr, args.verbose, priorities)
 
 if __name__ == "__main__":
     main()

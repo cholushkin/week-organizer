@@ -1,4 +1,4 @@
-tag;task;description;pickup-priority;days;remarks;prompt;
-#SKL;study-piano
-#SKL;study-drums
-#SKL;drone-practice
+tag;task;description;pickup-priority;days;remarks;prompt
+SKL;study-piano;;0.5;3-5;;
+SKL;study-drums;;0.5;3-5;;
+SKL;drone-practice;;0.5;3-5;;
