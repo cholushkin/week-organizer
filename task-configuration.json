@@ -76,5 +76,14 @@
         "color": "#ffffff"
       }
     }
+  },
+  "permanent-tasks": {
+	  1: [],
+	  2: [],
+	  3: [],
+	  4: [],
+	  5: [],
+	  6: [],
+	  7: ["organize-week;Move to done, summarize, generate next week, prepare medicine;;$day7_date;#TODO;Remarks;Summary"]
   }
 }
