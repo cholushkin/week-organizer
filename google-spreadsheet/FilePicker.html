@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <input type="file" id="csvFile" accept=".csv" />
+    <button onclick="uploadCSV()">Upload CSV</button>
+    
+    <script>
+      function uploadCSV() {
+        var file = document.getElementById('csvFile').files[0];
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          google.script.run.withSuccessHandler(closeDialog)
+            .processCSV(e.target.result, file.name.replace('.csv', ''));
+        };
+        
+        reader.readAsText(file);
+      }
+      
+      function closeDialog() {
+        google.script.host.close();
+      }
+    </script>
+  </body>
+</html>

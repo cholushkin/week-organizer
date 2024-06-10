@@ -85,3 +85,5 @@ the pipeline is the following
 - tag_level_suggestion.py - make a week suggestion in terms of tags. Could work as a separate console program.
 - task_level_suggestion.py - make a week suggestion in terms of tasks. Using as input the result received from tag_level_suggestion. Generates week_plan.csv as an output.
 
+## Spreadsheet install
+[Install spreadsheets scripts](add-script-to-sheets.md)
