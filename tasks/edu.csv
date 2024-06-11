@@ -1,6 +1,6 @@
 tag;task;description;pickup-priority;days;remarks;prompt
 EDU;article-sound-physics;Find and read article about physics of sound;0.1;1;;What are physics aspects of sound?
 EDU;architecture-book-choose; Choose one book about architecture and upload it to Surface. Add it to #edu books.csv;0.1;1;;what are good architecture books? 
-EDU;generic-python-book;Python book.Find modern Python programming book + some specific;AI programming(pytorch);0.2;1;;
+EDU;generic-python-book;Python book.Find modern Python programming book + some specific, AI programming(pytorch);0.2;1;;
 EDU;github-code-reading; choose some repository and spend at least 1hr of exploring the code;0.5;3-7;;What is good code or project repository i can investigate for a self education?
 EDU;music-theory; find some book;0.2;1;;

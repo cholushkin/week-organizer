@@ -15,12 +15,39 @@ def load_configuration(file_path):
         print(f"Error: The file {file_path} does not exist.")
         sys.exit(1)
 
+available_tags = ['TODO','SKL','HLT','ART','DEV','EDU','LNG','PRJ']        
 def is_valid_csv_file(file_path):
     try:
         # Attempt to open the file and read the first few lines to validate its structure
         with open(file_path, mode='r', newline='', encoding='utf-8') as csvfile:
             csvreader = csv.reader(csvfile, delimiter=';')
             headers = next(csvreader)
+            
+            # Check for consistent number of columns and empty rows
+            for row_number, row in enumerate(csvreader, start=2):
+            
+                if len(row) != len(headers):
+                    print(f"Error: Inconsistent number of columns at row {row_number}. Expected {len(headers)} but got {len(row)}.")
+                    return False  
+                    
+                # check tag value    
+                if not row[0] in available_tags:
+                    print(f"Error: {row[0]} tag found which is not allowed literal");
+                
+                # check task value 
+                if not (row[1] and isinstance(row[0], str)):
+                    print(f"Error: '{row[1]}' has wrong value for the task at row {row_number}");
+                    
+                # check pickup-priority 
+                if not (row[3] and row[3].replace('.', '', 1).isdigit() and float(row[3]) >= 0):
+                    print(f"Error: '{row[3]}' has wrong value for pickup-priority at row {row_number}");
+                    
+                # check days
+                if not row[4]:
+                    print(f"Error: '{row[4]}' has wrong value for days at row {row_number}");
+                    
+                    
+            
             # Add additional validation logic if needed
             return True
     except Exception as e:
@@ -142,8 +169,8 @@ def main():
         print(f'Output file: {args.output}')
     
     tasks_db = load_csv_files_from_directory(cfg["tasks-dir"], args.verbose)
-    if args.verbose:
-        print_db(tasks_db)
+    #if args.verbose:
+    #    print_db(tasks_db)
         
     weekly_schedule, tag_counts, tag_ranges = tag_level_suggestion.run_interactive_mode(False, args.verbose, cfg["tag-distribution"]["daily-priorities"])
     

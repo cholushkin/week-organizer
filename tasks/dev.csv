@@ -2,7 +2,7 @@ tag;task;description;pickup-priority;days;remarks;prompt
 DEV;learn-llvm; learn about LLVM;0.2;1-2;;tell me about LLVM briefly
 DEV;c-sharp-structs;learn about C# struct vs classes vs records vs record structs;0.1;1-2;;tell me about C# struct vs classes (also records, record structs and so on)
 DEV;Data driven approach;Data driven programming;0.3;2-4;;
-DEV;find-book;Find book for algorythms; Find book for algorythms pdf and upload to Surface;0.4;1;;
+DEV;find-book;Find book for algorythms pdf and upload to Surface;0.4;1;;
 DEV;Algorithms.Search; General review of search algorithms, find book, upload to Surface;0.5;1;;What are popular searching algorythms and books about searching algorithms
 DEV;DesignPattern.ServiceLocator;Learn service allocator design pattern.;0.1;2-4;https://en.wikipedia.org/wiki/Service_locator_pattern; What is service allocator design pattern?
 DEV;Multithreading;Multithreading programming in general, semaphore, mutex, other primitives overview;0.5;2-4;;What is multithreading programming in general?
@@ -19,7 +19,7 @@ DEV;jsonpath; jsonpath in general, is still actual, what are the alternatives;0.
 DEV;xml scheme; xml scheme in general, is still actual, what are the alternatives;0.1;2-3;;what is xml scheme in general, is still actual, what are the alternatives?
 DEV;override c++/c#;Using override keyword in c++ and c#, differences;0.2;2-4;;Tell me about override keyword in c++ and c#
 DEV;c# generics;c# generics programming, find separate book/tutorial;0.3;5-7;;What is generics programming in c#?
-DEV;Unity plugin. Try https://assetstore.unity.com/packages/tools/camera/adaptive-split-screen-223436 create experiment prj;0.1;2-3;;
+DEV;experiment-with-plugin;Unity plugin. Try https://assetstore.unity.com/packages/tools/camera/adaptive-split-screen-223436 create experiment prj;0.1;2-3;;
 DEV;Unity visual scripting; Investigate Unity visual scripting approaches;0.1;2-3;https://unity.com/features/unity-visual-scripting;What are benefits of visual programming?
 DEV;dot-net;.NET Framework vs .NET Core vs .NET vs .NET Standard vs C# versions;0.2;2-3;;
 DEV;Genetics algorithms;Genetics algorithms in general;0.1;2-3;;what are genetics algorithms in general? from prograamers and developers perspective.
