@@ -176,34 +176,34 @@ def print_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, verbose)
         #    if count > 0:  # Only print tags that are used that day
         #        color = get_color(priorities[tag].get("color", "white"))
         #        print(f"  {color}{tag}: {count} time(s) today{Style.RESET_ALL}")
-                
-    print("\nTag Counts and Ranges:")
-    for tag, count in tag_counts.items():
-        min_count, max_count = tag_ranges[tag]
-        color = get_color(priorities[tag].get("color", "white"))
-        weekly_amount = priorities[tag]["weekly-amount-days"]
-        daily_amount = priorities[tag]["daily-amount"]
-        tag_counts_str = ", ".join([str(tag_count[tag]) for tag_count in week_tags_count if tag_count[tag] > 0])
+    
 
-        
-        # Handle weekly amount range
-        if len(weekly_amount) > 1:
-            weekly_range = f"{weekly_amount[0]}-{weekly_amount[1]}"
-        else:
-            weekly_range = f"{weekly_amount[0]}-{weekly_amount[0]}"
-        
-        # Handle daily amount range
-        if len(daily_amount) > 1:
-            daily_range = f"{daily_amount[0]}-{daily_amount[1]}"
-        else:
-            daily_range = f"{daily_amount[0]}-{daily_amount[0]}"
+    if verbose:
+        print("\nTag Counts and Ranges:")
+        for tag, count in tag_counts.items():
+            min_count, max_count = tag_ranges[tag]
+            color = get_color(priorities[tag].get("color", "white"))
+            weekly_amount = priorities[tag]["weekly-amount-days"]
+            daily_amount = priorities[tag]["daily-amount"]
+            tag_counts_str = ", ".join([str(tag_count[tag]) for tag_count in week_tags_count if tag_count[tag] > 0])
+
             
-        if verbose:
+            # Handle weekly amount range
+            if len(weekly_amount) > 1:
+                weekly_range = f"{weekly_amount[0]}-{weekly_amount[1]}"
+            else:
+                weekly_range = f"{weekly_amount[0]}-{weekly_amount[0]}"
+            
+            # Handle daily amount range
+            if len(daily_amount) > 1:
+                daily_range = f"{daily_amount[0]}-{daily_amount[1]}"
+            else:
+                daily_range = f"{daily_amount[0]}-{daily_amount[0]}"
+                
             print(f"{color}{tag}: tag-sum:{min_count}-{max_count}(cur:{count}), "
                   f"weekly-amount-days: {weekly_range}(cur:{tag_day_count[tag]}), "
                   f"daily-amount: {daily_range}(cur:{tag_counts_str}){Style.RESET_ALL}")
-        else:
-            print(f"{color}{tag}: {count}")
+
             
             
 def run_interactive_mode(clr, verbose, priorities):
@@ -222,6 +222,7 @@ Enter your option:
   'd' - to decrease week difficulty;
   'r' - to regenerate week;
   'c' - to continue;
+  'e' - to exit/abort;
 """
         ).strip().lower()
         if user_input == "i":
@@ -230,6 +231,9 @@ Enter your option:
             weekly_schedule, tag_counts = adjust_schedule(weekly_schedule, tag_counts, tag_ranges, priorities, easier=True)
         elif user_input == "r":
             weekly_schedule, tag_counts, tag_ranges = generate_schedule(priorities)
+        elif user_input == "e":
+            print("Aborting...")
+            sys.exit()
         elif user_input == "c":
             break
         else:

@@ -27,24 +27,24 @@ def is_valid_csv_file(file_path):
             for row_number, row in enumerate(csvreader, start=2):
             
                 if len(row) != len(headers):
-                    print(f"Error: Inconsistent number of columns at row {row_number}. Expected {len(headers)} but got {len(row)}.")
+                    print(f"Error: Inconsistent number of columns at row {row_number}. Expected {len(headers)} but got {len(row)}. (File:{file_path})")
                     return False  
                     
                 # check tag value    
                 if not row[0] in available_tags:
-                    print(f"Error: {row[0]} tag found which is not allowed literal");
+                    print(f"Error: {row[0]} tag found which is not allowed literal. (File:{file_path})");
                 
                 # check task value 
                 if not (row[1] and isinstance(row[0], str)):
-                    print(f"Error: '{row[1]}' has wrong value for the task at row {row_number}");
+                    print(f"Error: '{row[1]}' has wrong value for the task at row {row_number}. (File:{file_path})");
                     
                 # check pickup-priority 
                 if not (row[3] and row[3].replace('.', '', 1).isdigit() and float(row[3]) >= 0):
-                    print(f"Error: '{row[3]}' has wrong value for pickup-priority at row {row_number}");
+                    print(f"Error: '{row[3]}' has wrong value for pickup-priority at row {row_number}. (File:{file_path})");
                     
                 # check days
                 if not row[4]:
-                    print(f"Error: '{row[4]}' has wrong value for days at row {row_number}");
+                    print(f"Error: '{row[4]}' has wrong value for days at row {row_number}. (File:{file_path})");
                     
                     
             

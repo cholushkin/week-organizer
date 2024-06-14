@@ -105,12 +105,38 @@ def get_min_days_from_range_string(ranged_string):
         min_days = max_days = int(t['days'])
     return max_days
 
-def print_distribution(distribution):
+def print_distribution(distribution, weekly_tag_schedule, priorities):
     for day_index, day in enumerate(distribution):
         print(f"\n{day_index + 1}. {day['date']}")
         for task_index, task in enumerate(day['tasks']):
-            print(f"  {task_index + 1}. {task}")
+            if task is None:
+                tag = weekly_tag_schedule[day_index][task_index]
+                tag = tag[1:]
+                task = replaceNoneTaskWithGeneric(task, tag)
+            
+            tag = '#'+task["tag"]
+            color = get_color(priorities[tag].get("color", "white"))
+            
+            task_name = task["name"]
+            task_description = task["description"]
+            if len(task_description) > 0:
+                print(f"  {task_index + 1}. {color}{tag}:{task_name} = {task_description}{Style.RESET_ALL}")
+            else:
+                print(f"  {task_index + 1}. {color}{tag}:{task_name}{Style.RESET_ALL}")
 
+def replaceNoneTaskWithGeneric(task, tag):
+    if not task is None:
+        return task 
+    return {
+        'name': 'generic-'+tag,
+        'description': f"Can't suggest something particular. Please add some new {tag} tasks to backstage", 
+        'status': 'new', 
+        'tag': tag, 
+        'remarks': "Find task by yourself", 
+        'summary': ''
+    }    
+    
+    
 def save_distribution_to_csv(distribution, output_file):
     # Open the CSV file for writing
     with open(output_file, mode='w', newline='', encoding='utf-8') as file:
@@ -157,7 +183,7 @@ def run_interactive_mode(verbose, weekly_schedule, tag_counts, tag_ranges, tasks
     while True:
         week_dist.distribute_tasks(tasks_db)        
         distribution = week_dist.get_distribution()
-        print_distribution( distribution )        
+        print_distribution( distribution, weekly_schedule, priorities )        
         
         user_input = input(
             """
@@ -171,6 +197,8 @@ Enter your option:
         if user_input == "r":
             week_dist.distribute_tasks(tasks_db)        
         elif user_input == "c":
+            print(f"Saving plan to {output_file}")
+            save_distribution_to_csv(distribution, output_file)   
             break
         elif user_input == "e":
             print("Abort.")
@@ -180,4 +208,4 @@ Enter your option:
 
         
     
-    save_distribution_to_csv(distribution, output_file)   
+    
