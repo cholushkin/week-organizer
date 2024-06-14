@@ -8,5 +8,5 @@ PRJ;prj-neon-cat;Neon cat game project.;0.2;2-3;;
 PRJ;prj-rover;Rover game project.;0.2;2-3;;
 PRJ;prj-tower-generator;Tower generator lib project.;0.2;2-3;;
 PRJ;prj-unity-stable-diffusion;Unity Stable Diffusion.;0.1;2-3;;
-PRJ;prj-version-history;Version history lib.;0.2;2-3;;
+PRJ;prj-version-history;Version history lib + smart commit message.;0.2;2-3;;
 PRJ;prj-gamelib;Gamelib.;0.2;2-3;;
