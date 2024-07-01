@@ -4,6 +4,7 @@ import os
 import csv
 import json
 from datetime import datetime
+from colorama import Fore, Style, init
 import tag_level_suggestion
 import task_level_suggestion
 
@@ -15,7 +16,10 @@ def load_configuration(file_path):
         print(f"Error: The file {file_path} does not exist.")
         sys.exit(1)
 
-available_tags = ['TODO','SKL','HLT','ART','DEV','EDU','LNG','PRJ']        
+
+def printError(error_message):
+    print(f"{Fore.RED}{error_message}{Style.RESET_ALL}")
+available_tags = ['TODO','SKL','HLT','ART','DEV','EDU','LNG','PRJ','ENT']        
 def is_valid_csv_file(file_path):
     try:
         # Attempt to open the file and read the first few lines to validate its structure
@@ -27,31 +31,31 @@ def is_valid_csv_file(file_path):
             for row_number, row in enumerate(csvreader, start=2):
             
                 if len(row) != len(headers):
-                    print(f"Error: Inconsistent number of columns at row {row_number}. Expected {len(headers)} but got {len(row)}. (File:{file_path})")
+                    printError(f"Error: Inconsistent number of columns at row {row_number}. Expected {len(headers)} but got {len(row)}. (File:{file_path})")
                     return False  
                     
                 # check tag value    
                 if not row[0] in available_tags:
-                    print(f"Error: {row[0]} tag found which is not allowed literal. (File:{file_path})");
+                    printError(f"Error: {row[0]} tag found which is not allowed literal. (File:{file_path})");
                 
                 # check task value 
                 if not (row[1] and isinstance(row[0], str)):
-                    print(f"Error: '{row[1]}' has wrong value for the task at row {row_number}. (File:{file_path})");
+                    printError(f"Error: '{row[1]}' has wrong value for the task at row {row_number}. (File:{file_path})");
                     
                 # check pickup-priority 
                 if not (row[3] and row[3].replace('.', '', 1).isdigit() and float(row[3]) >= 0):
-                    print(f"Error: '{row[3]}' has wrong value for pickup-priority at row {row_number}. (File:{file_path})");
+                    printError(f"Error: '{row[3]}' has wrong value for pickup-priority at row {row_number}. (File:{file_path})");
                     
                 # check days
                 if not row[4]:
-                    print(f"Error: '{row[4]}' has wrong value for days at row {row_number}. (File:{file_path})");
+                    printError(f"Error: '{row[4]}' has wrong value for days at row {row_number}. (File:{file_path})");
                     
                     
             
             # Add additional validation logic if needed
             return True
     except Exception as e:
-        print(f"Error reading CSV file {file_path}: {e}")
+        printError(f"Error reading CSV file {file_path}: {e}")
         return False
         
 def load_csv_files_from_directory(tasks_dir, verbose):

@@ -5,3 +5,4 @@ EDU;generic-python-book;Python book.Find modern Python programming book + some s
 EDU;github-code-reading; choose some repository and spend at least 1hr of exploring the code;0.5;3-7;;What is good code or project repository i can investigate for a self education?
 EDU;music-theory; find some book;0.2;1;;
 EDU;software-rendering-tutorial; https://github.com/ssloy/tinyrenderer/wiki/Lesson-0:-getting-started ;0.2;3;Good for understanding how rendering works in general;
+EDU;chat-gpt-quiz;Ask for a quiz for a different topic: geographi, programming, gamedev, history, etc.;0.2;5;;
