@@ -58,7 +58,7 @@ class WeekDistribution:
         return self.week_distribution
 
 
-    def get_next_random_task(tasks, tag, max_slots_count):
+    def get_next_random_task(self, tasks, tag, max_slots_count):
         filtered_tasks = [t for t in tasks if t['tag'] == tag and get_min_max_days_from_range_string(t['days'])[0]
                           <= max_slots_count]
         if not filtered_tasks:
@@ -74,40 +74,43 @@ class WeekDistribution:
 
     def distribute_tasks(self, tasks_db_origin, tag_counts):
         """
-            Algorithm Description:
-            1. Make a deep copy of the original tasks database to avoid modifying the original data.
-            2. Create a dictionary of available slots by removing the first character from each tag in tag_counts.
-            3. For each tag in available slots:
-               a. While there are available slots for the tag:
-                  i. Get the next random task that fits within the available slots.
-                  ii. If no task is found, break the loop.
-                  iii. Add the selected task and the number of days it should take to assigned_tasks.
-                  iv. Reduce the count of available slots by the number of days assigned to the task.
-            4. Distribute the assigned tasks across the week_distribution:
-               a. For each assigned task and its days:
-                  i. Iterate through each day in the week_distribution.
-                  ii. For each slot in the day:
-                     - If the slot matches the task's tag and is empty:
-                       1. Assign the task to the slot.
-                       2. Reduce the number of days remaining for the task.
-                       3. Break the loop if all days are assigned.
-                  iii. Move to the next day if there are still days remaining for the task.
-            5. Print all assigned tasks.
+        Algorithm Description:
+        1. Make a deep copy of the original tasks database to avoid modifying the original data.
+        2. Create a dictionary of available slots by removing the first character from each tag in tag_counts.
+        3. For each tag in available slots:
+           a. While there are available slots for the tag:
+              i. Get the next random task that fits within the available slots.
+              ii. If no task is found, break the loop and add the tag to the "can't distribute" list.
+              iii. Add the selected task and the number of days it should take to assigned_tasks.
+              iv. Reduce the count of available slots by the number of days assigned to the task.
+        4. Distribute the assigned tasks across the week_distribution:
+           a. For each assigned task and its days:
+              i. Iterate through each day in the week_distribution.
+              ii. For each slot in the day:
+                 - If the slot matches the task's tag and is empty:
+                   1. Assign the task to the slot.
+                   2. Reduce the number of days remaining for the task.
+                   3. Break the loop if all days are assigned.
+              iii. Move to the next day if there are still days remaining for the task.
+        5. If no slots are available, extend already allocated tasks if they haven't reached their maximum days.
         """
         tasks_db = copy.deepcopy(tasks_db_origin)
         available_slots = {tag[1:]: count for tag, count in tag_counts.items()}
 
         assigned_tasks = []
+        cant_distribute_tasks = []
 
+        # Step 3: Assign tasks initially
         for tag, count in available_slots.items():
             while count > 0:
-                selected_task, task_days = get_next_random_task(tasks_db, tag, count)
+                selected_task, task_days = self.get_next_random_task(tasks_db, tag, count)
                 if selected_task is None:
+                    cant_distribute_tasks.append((tag, count))
                     break
                 assigned_tasks.append((selected_task, task_days))
                 count -= task_days
 
-        # Distribute assigned tasks to week_distribution
+        # Step 4: Distribute assigned tasks to week_distribution
         for assigned_task, task_days in assigned_tasks:
             for day in self.week_distribution:
                 for i, tag in enumerate(day["tags"]):
@@ -127,6 +130,45 @@ class WeekDistribution:
                 if task_days == 0:
                     break
 
+        # for day in self.week_distribution:
+        #     for task in day["tasks"]:
+        #         if task is not None:
+        #             print(f"Assigned Task: {task['name']} for {task['tag']}")
+        #         else:
+        #             print("none")
+
+        # Step 5: Extend already allocated tasks if no new slots available
+        for tag, remaining_count in cant_distribute_tasks:
+            for assigned_task, _ in assigned_tasks:
+                if assigned_task['tag'] == tag:
+                    min_days, max_days = get_min_max_days_from_range_string(assigned_task['days'])
+                    for day in self.week_distribution:
+                        for i, task in enumerate(day["tasks"]):
+                            if task and task["tag"] == assigned_task["tag"] and task["name"] == assigned_task["task"]:
+                                current_days = sum(
+                                    sum(1 for t in d["tasks"] if
+                                        isinstance(t, dict) and t.get("name") == assigned_task.get("name"))
+                                    for d in self.week_distribution
+                                )
+                                if current_days < max_days and remaining_count > 0:
+                                    # Find the first empty slot in the entire week to extend the task
+                                    found_empty_slot = False
+                                    for d in self.week_distribution:
+                                        for j, slot in enumerate(d["tasks"]):
+                                            if slot is None:
+                                                print(f"Extending {task} to day {d['date']}: +1")
+                                                d["tasks"][j] = task  # Assign task to the empty slot
+                                                remaining_count -= 1
+                                                found_empty_slot = True
+                                                break
+                                        if found_empty_slot:
+                                            break
+                                if remaining_count == 0:
+                                    break
+                        if remaining_count == 0:
+                            break
+                    if remaining_count == 0:
+                        break
 
 
 def sanitize_value(value):
