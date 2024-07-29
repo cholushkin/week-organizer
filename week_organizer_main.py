@@ -178,11 +178,17 @@ def main():
         
     weekly_schedule, tag_counts, tag_ranges = tag_level_suggestion.run_interactive_mode(False, args.verbose, cfg["tag-distribution"]["daily-priorities"])
     
-    task_level_suggestion.run_interactive_mode(args.verbose, weekly_schedule, tag_counts, tag_ranges, tasks_db, args.start_date, cfg["tag-distribution"]["daily-priorities"], args.output)
-    
-    
-    
-    
+    task_level_suggestion.run_interactive_mode(
+        args.verbose, 
+        weekly_schedule, 
+        tag_counts, 
+        tag_ranges, 
+        tasks_db, 
+        args.start_date, 
+        cfg["tag-distribution"]["daily-priorities"], 
+        cfg["permanent-tasks"], 
+        args.output) 
+     
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from tag_level_suggestion import get_color  # Import the get_color function
 from colorama import Style
 import copy
+import io
 
 # pseudo json representation of week_distribution structure
 # week_distribution = [
@@ -219,7 +220,7 @@ def replaceNoneTaskWithGeneric(task, tag):
     }    
     
     
-def save_distribution_to_csv(distribution, output_file):
+def save_distribution_to_csv(distribution, permanent_tasks, output_file):
     # Open the CSV file for writing
     with open(output_file, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
@@ -228,10 +229,24 @@ def save_distribution_to_csv(distribution, output_file):
         writer.writerow(["Task", "Description", "Status", "Date", "Tags", "Remarks", "Summary"])
 
         # Write the distribution data
+        day_index = 0
         for day in distribution:
             task_date = day["date"]
             tags = day["tags"]
             tasks = day["tasks"]
+        
+            day_index += 1
+            perm_tasks = permanent_tasks.get(str(day_index), [])
+            
+            for ptask in perm_tasks:
+                # Replace $DATE with task_date in ptask
+                ptask = ptask.replace("$DATE", task_date)
+                
+                # Use csv.reader to correctly parse the CSV row
+                ptask_stream = io.StringIO(ptask)
+                ptask_fields = next(csv.reader(ptask_stream, skipinitialspace=True))
+                writer.writerow(ptask_fields)
+            
             for i, task in enumerate(tasks): 
                 if task is None:
                     task_name = "generic-"+tags[i]
@@ -257,9 +272,10 @@ def save_distribution_to_csv(distribution, output_file):
         writer.writerow(["Task focus", "", "", "", "", "", ""])
         writer.writerow(["Week goal", "", "", "", "", "", ""])
         writer.writerow(["Week summary", "", "", "", "", "", ""])
+
         
 
-def run_interactive_mode(verbose, weekly_schedule, tag_counts, tag_ranges, tasks_db, start_date, priorities, output_file):
+def run_interactive_mode(verbose, weekly_schedule, tag_counts, tag_ranges, tasks_db, start_date, priorities, permanent_tasks, output_file):
     week_dist = WeekDistribution(weekly_schedule, start_date, verbose)
     
     while True:
@@ -280,7 +296,7 @@ Enter your option:
             week_dist.distribute_tasks(tasks_db, tag_counts)
         elif user_input == "c":
             print(f"Saving plan to {output_file}")
-            save_distribution_to_csv(distribution, output_file)   
+            save_distribution_to_csv(distribution, permanent_tasks, output_file)   
             break
         elif user_input == "e":
             print("Abort.")

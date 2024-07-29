@@ -78,12 +78,48 @@
     }
   },
   "permanent-tasks": {
-	  "1": ["HLT;workout;App","SKL;drone-practice;Real life or simulator","LNG;language-swedish;Duo lingo or anki","EDU;geography-europe;anki cards"],
-	  "2": [],
-	  "3": [],
-	  "4": [],
-	  "5": [],
-	  "6": [],
-	  "7": ["TODO;organize-week;Move to done, summarize, generate next week, prepare medicine"]
+	  "1": [
+		"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,"
+	  ],
+	  "2": [
+		"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,"
+	  ],
+	  "3": [
+		"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,"
+	  ],
+	  "4": [
+		"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,"
+	  ],
+	  "5": [
+  		"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,"
+	  ],
+	  "6": [
+	  	"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,"
+	  ],
+	  "7": [
+	  	"workout,App,new,$DATE,HLT,,",
+		"drone-practice,Real life or simulator,new,$DATE,SKL,,",
+		"language-swedish,Duo lingo or anki,new,$DATE,LNG,,",
+		"geography-europe,anki cards,new,$DATE,EDU,,",
+		"organize-week,\"Move to done, summarize, generate next week, prepare medicine\",new,$DATE,TODO,,"
+	  ]
   }
 }
