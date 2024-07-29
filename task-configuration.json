@@ -78,12 +78,12 @@
     }
   },
   "permanent-tasks": {
-	  "1": [],
+	  "1": ["HLT;workout;App","SKL;drone-practice;Real life or simulator","LNG;language-swedish;Duo lingo or anki","EDU;geography-europe;anki cards"],
 	  "2": [],
 	  "3": [],
 	  "4": [],
 	  "5": [],
 	  "6": [],
-	  "7": ["TODO;organize-week;Move to done, summarize, generate next week, prepare medicine;;;;"]
+	  "7": ["TODO;organize-week;Move to done, summarize, generate next week, prepare medicine"]
   }
 }

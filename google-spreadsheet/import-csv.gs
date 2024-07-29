@@ -36,6 +36,9 @@ function decorateSheet(sheet, data) {
   // Format the Date column to "Monday, June 10, 2024"
   sheet.getRange(2, 4, sheet.getLastRow()-1).setNumberFormat("dddd, mmmm dd, yyyy");
 
+  // Wrap text in the second column
+  var secondColumn = sheet.getRange(2, 2, sheet.getLastRow()-1); // Assuming text to be wrapped is in the second column
+  secondColumn.setWrap(true);
 
   // Add conditional formatting to Status column
   var statusColumn = sheet.getRange(2, 3, sheet.getLastRow()-1); // Assuming 'Status' is in the second column
@@ -53,6 +56,25 @@ function decorateSheet(sheet, data) {
   rules.push(rule1);
   rules.push(rule2);
   sheet.setConditionalFormatRules(rules);
+
+  // Color blocks of data with grey background and keep empty lines white
+  var numRows = data.length;
+  var numCols = data[0].length;  
+  var colors = [];
+
+  for (var i = 1; i < numRows; i++) {
+    var rowData = data[i];
+    if (rowData.every(cell => cell === '')) {
+      // Empty line
+      colors.push(new Array(numCols).fill('#FFFFFF')); // White
+    } else {
+      // Data block
+      colors.push(new Array(numCols).fill('#D3D3D3')); // Grey
+    }
+  }
+
+  // Apply the background colors in one go
+  sheet.getRange(2, 1, numRows-1, numCols).setBackgrounds(colors);
 }
 
 function decorateTagsColumn(sheet, data) {
